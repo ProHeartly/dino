@@ -1,15 +1,96 @@
 <body>
     <h1>Hello worlddddd</h1>
+    <canvas width="854" height="480" id="canvas"></canvas>
     <style>
         body {
-            background-color: black;
-            color: aliceblue;
+            background-color: #30343f;
+            color: #e4d9ff;
             font-family: monospace;
             text-align: center;
+        }
+        canvas {
+            background-color: #fafaff;
         }
     </style>
     <script>
         const title = document.querySelector("h1");
         title.onclick = () => (alert("woaa!"));
+
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext('2d');
+
+        const dinoS = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        ] // 16x16 block of dino i mean "square" for now
+
+        const pixelSize = 7; // scales our pixel art
+
+        const groundY = 400; //we define where the ground is, like in our case, its 854x480 (480p quality) and here we can see height is 480 so considering some margin, we can take 400 as safe spot for floor
+
+        let dino = {
+            x: 100,
+            y: groundY - (dinoS.length * pixelSize),
+            width: dinoS[0].length * pixelSize,
+            height: dinoS.length * pixelSize,
+            velocityY: 0,
+            gravity: 0.8,
+            jumpStrength: 16,
+            isGrounded: false // to make it only jump when in floorrr
+        };
+
+        function drawDino(x, y) { //draws the dinooo
+            ctx.fillStyle = '#273469';
+            for (let r = 0; r < dinoS.length; r++) {
+                for (let c = 0; c < dinoS[r].length; c++) {
+                    if (dinoS[r][c] === 1) {
+                        ctx.fillRect(x + (c*pixelSize), y + (r * pixelSize), pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+
+        function update() { //actively updates pos
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            dino.velocityY += dino.gravity;
+            dino.y += dino.velocityY;
+
+            const maxFloorY = groundY - dino.height;
+            if (dino.y >= maxFloorY) {
+                dino.y = maxFloorY;
+                dino.velocityY = 0;
+                dino.isGrounded = true;
+            } else {
+                dino.isGrounded = false;
+            }
+
+            ctx.strokeStyle = '#1e2749';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(canvas.width, groundY);
+            ctx.stroke();
+
+            drawDino(dino.x, dino.y);
+            
+            requestAnimationFrame(update);
+        }
+
+        update();
     </script>
 </body>
