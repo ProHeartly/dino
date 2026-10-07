@@ -40,10 +40,10 @@
 
         const pixelSize = 7; // scales our pixel art
 
-        const groundY = 400; //we define where the ground is, like in our case, its 854x480 (480p quality) and here we can see height is 480 so considering some margin, we can take 400 as safe spot for floor
+        const groundY = 430; //we define where the ground is, like in our case, its 854x480 (480p quality) and here we can see height is 480 so considering some margin, we can take 430 as safe spot for floor
 
         let dino = {
-            x: 100,
+            x: 300,
             y: groundY - (dinoS.length * pixelSize),
             width: dinoS[0].length * pixelSize,
             height: dinoS.length * pixelSize,
@@ -61,6 +61,13 @@
                         ctx.fillRect(x + (c*pixelSize), y + (r * pixelSize), pixelSize, pixelSize);
                     }
                 }
+            }
+        }
+
+        function triggerJump() {
+            if (dino.isGrounded) {
+                dino.velocityY = -dino.jumpStrength; // (-)ve cuz velocityY's direction is down ;)
+                dino.isGrounded = false;
             }
         }
 
@@ -90,6 +97,14 @@
             
             requestAnimationFrame(update);
         }
+
+        window.addEventListener('mousedown', triggerJump);
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                triggerJump();
+            }
+        });
 
         update();
     </script>
