@@ -6,18 +6,18 @@
             background-color: #30343f;
             color: #e4d9ff;
             font-family: monospace;
-            text-align: center;
+            text-align: center; 
         }
         canvas {
             background-color: #fafaff;
         }
     </style>
     <script>
-        const title = document.querySelector("h1");
-        title.onclick = () => (alert("woaa!"));
-
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext('2d');
+        // I changed names to short for extra space
+        document.querySelector("h1").onclick = () => (alert("woaa!"));
+        
+        const c = document.getElementById("canvas");
+        const ctx = c.getContext('2d');
 
         const dinoS = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -38,27 +38,102 @@
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         ] // 16x16 block of dino i mean "square" for now
 
-        const pixelSize = 7; // scales our pixel art
+        const Single = [
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1]
+        ];
+
+        const Double = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        ];
+
+        const Tall = [
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1]
+        ];
+
+        const vari = [Single, Double, Tall];
+
+
+        const pixel = 7; // scales our pixel art
 
         const groundY = 430; //we define where the ground is, like in our case, its 854x480 (480p quality) and here we can see height is 480 so considering some margin, we can take 430 as safe spot for floor
 
         let dino = {
             x: 300,
-            y: groundY - (dinoS.length * pixelSize),
-            width: dinoS[0].length * pixelSize,
-            height: dinoS.length * pixelSize,
+            y: groundY - (dinoS.length * pixel),
+            width: dinoS[0].length * pixel,
+            height: dinoS.length * pixel,
             velocityY: 0,
             gravity: 0.8,
-            jumpStrength: 16,
+            jumpStrength: 17, // turns out 16 was a little less
             isGrounded: false // to make it only jump when in floorrr
         };
 
-        function drawDino(x, y) { //draws the dinooo
-            ctx.fillStyle = '#273469';
-            for (let r = 0; r < dinoS.length; r++) {
-                for (let c = 0; c < dinoS[r].length; c++) {
-                    if (dinoS[r][c] === 1) {
-                        ctx.fillRect(x + (c*pixelSize), y + (r * pixelSize), pixelSize, pixelSize);
+        let obstacles = [];
+        let gameSpeed = 10;
+        let spawnTimer = 0;
+        let nextSpawnTime = 100;
+
+        function spawnObstacle() {
+            const ss = vari[Math.floor(Math.random()*vari.length)];
+
+            const oW = ss[0].length * pixel;
+            const oH = ss.length * pixel;
+
+            obstacles.push({
+                x: c.width,
+                y: groundY - oH,
+                width: oW,
+                height: oH,
+                sprite: ss
+            });
+        }
+
+        function drawSprite(sprite, x, y, color) { //draws the dinooo and obstacles
+            ctx.fillStyle = color;
+            for (let r = 0; r < sprite.length; r++) {
+                for (let c = 0; c < sprite[r].length; c++) {
+                    if (sprite[r][c] === 1) {
+                        ctx.fillRect(x + (c*pixel), y + (r * pixel), pixel, pixel);
                     }
                 }
             }
@@ -72,7 +147,7 @@
         }
 
         function update() { //actively updates pos
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, c.width, c.height);
 
             dino.velocityY += dino.gravity;
             dino.y += dino.velocityY;
@@ -86,14 +161,32 @@
                 dino.isGrounded = false;
             }
 
+            // spawner
+            spawnTimer++;
+            if (spawnTimer >= nextSpawnTime) {
+                spawnObstacle();
+                spawnTimer = 0;
+                nextSpawnTime = Math.floor(Math.random()*80) + 80;
+            }
+
+            // move andd draw obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= gameSpeed;
+
+                drawSprite(obstacles[i].sprite, obstacles[i].x, obstacles[i].y, "#27ae60");
+
+                if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
+            }
+            
+
             ctx.strokeStyle = '#1e2749';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(0, groundY);
-            ctx.lineTo(canvas.width, groundY);
+            ctx.lineTo(c.width, groundY);
             ctx.stroke();
 
-            drawDino(dino.x, dino.y);
+            drawSprite(dinoS, dino.x, dino.y, "#273469");
             
             requestAnimationFrame(update);
         }
