@@ -1,6 +1,6 @@
 <body>
     <h1>Hello worlddddd</h1>
-    <canvas width="854" height="480" id="canvas"></canvas>
+    <canvas width="854" height="480" id="c"></canvas>
     <style>
         body {
             background-color: #30343f;
@@ -17,10 +17,13 @@
         // started with sprites which ate up most of the spaces!
         // replaced old line making strat with just making rectangle which is 1 liner
         // using precalculated values for things that are constant like x, y, width, height, etc of vari, dino's y pos, position of text, other
+        // changed DOM properties to shorterrrr
+        // made triggerz shortterrr
+        // since spawner function was just overkill, removed it and made it inside update itself!
         // I changed names to short for extra space
         document.querySelector("h1").onclick = () => (alert("woaa!"));
         
-        const c = document.getElementById("canvas");
+        const c = document.getElementById("c");
         const ctx = c.getContext('2d');
 
         const dinoS = [1008, 2040, 1784, 2040, 2016, 2044, 8176, 16382, 65520, 65520, 65472, 16320, 3968, 3456, 2304, 3456];
@@ -43,40 +46,19 @@
         let dino = {
             x: 300,
             y: 318, // 430 - 112
-            width: 112, // 16 * pixel (7)
-            height: 112,
-            velocityY: 0,
-            gravity: 0.8,
-            jumpStrength: 17, // turns out 16 was a little less
-            isGrounded: false // to make it only jump when in floorrr
-        };
+            w: 112, // 16 * pixel (7)
+            h: 112,
+            v: 0, // only velocity of y
+            g: 0.8, // gravity
+            j: 17, // jump strength -turns out 16 was a little less
+            ig: false // isGrounded -to make it only jump when in floorrr
+        }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0;
 
-        let obstacles = [];
-        let gameSpeed = 10;
-        let spawnTimer = 0;
-        let nextSpawnTime = 100;
-        let gameOver = false;
-
-        let score = 0;
-
-        function spawnObstacle() {
-            const ch = vari[Math.floor(Math.random() * 3)];
-
-            obstacles.push({
-                x: c.width,
-                y: ch.y,
-                width: ch.w,
-                height: ch.h,
-                sprite: ch.s,
-                cols: ch.cols
-            });
-        }
-
-        function drawSprite(s, width, x, y, color) { //draws the dinooo and obstacles
+        function drawSprite(s, w, x, y, color) { //draws the dinooo and obstacles
             ctx.fillStyle = color;
             s.forEach((rowNumber, r) => {
-            for (let c = 0; c < width; c++) {
-                if ((rowNumber >> (width - 1 - c)) & 1) {
+            for (let c = 0; c < w; c++) {
+                if ((rowNumber >> (w - 1 - c)) & 1) {
                     ctx.fillRect(x + c * pixel, y + r * pixel, pixel, pixel);
                 }
             }
@@ -86,10 +68,10 @@
         // checks AABB collision
         function checkCol(r1, r2) {
             return (
-               r1.x < r2.x + r2.width &&
-               r1.x + r1.width > r2.x &&
-               r1.y < r2.y + r2.height &&
-               r1.y + r1.height > r2.y
+               r1.x < r2.x + r2.w &&
+               r1.x + r1.w > r2.x &&
+               r1.y < r2.y + r2.h &&
+               r1.y + r1.h > r2.y
         )
         }
 
@@ -98,7 +80,7 @@
             spawnTimer = 0;
             gameOver = false;
             dino.y = 318;
-            dino.velocityY = 0;
+            dino.v = 0;
             score = 0;
             update();
         }
@@ -108,9 +90,9 @@
                 resetGame();
                 return;
             }
-            if (dino.isGrounded) {
-                dino.velocityY = -dino.jumpStrength; // (-)ve cuz velocityY's direction is down ;)
-                dino.isGrounded = false;
+            if (dino.ig) {
+                dino.v = -dino.j; // (-)ve cuz velocityY's direction is down ;)
+                dino.ig = false;
             }
         }
 
@@ -118,28 +100,29 @@
             ctx.clearRect(0, 0, c.width, c.height);
 
             score+= 0.15;
-            dino.velocityY += dino.gravity;
-            dino.y += dino.velocityY;
+            dino.v += dino.g;
+            dino.y += dino.v;
 
-            dino.isGrounded = dino.y >= 318;
-            if (dino.isGrounded) {
+            dino.ig = dino.y >= 318;
+            if (dino.ig) {
                 dino.y = 318;
-                dino.velocityY = 0;
+                dino.v = 0;
             }
 
             // spawner
             spawnTimer++;
             if (spawnTimer >= nextSpawnTime) {
-                spawnObstacle();
+                const ch = vari[~~(Math.random() * 3)];
+                obstacles.push({ x: 854, y: ch.y, w: ch.w, h: ch.h, s: ch.s, cols: ch.cols });
                 spawnTimer = 0;
-                nextSpawnTime = Math.floor(Math.random()*80) + 80;
+                nextSpawnTime = ~~(Math.random() * 80) + 80;
             }
 
             // move andd draw obstacles
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 obstacles[i].x -= gameSpeed;
 
-                drawSprite(obstacles[i].sprite, obstacles[i].cols, obstacles[i].x, obstacles[i].y, "#283618"); //this new green little better
+                drawSprite(obstacles[i].s, obstacles[i].cols, obstacles[i].x, obstacles[i].y, "#283618"); //this new green little better
 
                 if (checkCol(dino, obstacles[i])) {
                     gameOver = true;
@@ -153,7 +136,7 @@
                     ctx.fillText('Press SPACE or CLICK to Restart', 427, 280);
                     return;
                 }
-                if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
+                if (obstacles[i].x + obstacles[i].w < 0) obstacles.splice(i, 1);
             }
             
 
@@ -165,13 +148,8 @@
             requestAnimationFrame(update);
         }
 
-        window.addEventListener('mousedown', triggerJump);
-        window.addEventListener('keydown', (e) => {
-            if (e.key === ' ') {
-                e.preventDefault();
-                triggerJump();
-            }
-        });
+        window.onmousedown = triggerJump;
+        window.onkeydown = e => e.key === ' ' && (e.preventDefault(), triggerJump());
 
         update();
     </script>
