@@ -112,6 +112,7 @@
         let gameSpeed = 10;
         let spawnTimer = 0;
         let nextSpawnTime = 100;
+        let gameOver = false;
 
         function spawnObstacle() {
             const ss = vari[Math.floor(Math.random()*vari.length)];
@@ -139,7 +140,30 @@
             }
         }
 
+        // checks AABB collision
+        function checkCol(r1, r2) {
+            return (
+               r1.x < r2.x + r2.width &&
+               r1.x + r1.width > r2.x &&
+               r1.y < r2.y + r2.height &&
+               r1.y + r1.height > r2.y
+        )
+        }
+
+        function resetGame() {
+            obstacles = [];
+            spawnTimer = 0;
+            gameOver = false;
+            dino.y = groundY - dino.height;
+            dino.velocityY = 0;
+            update();
+        }
+
         function triggerJump() {
+            if (gameOver) {
+                resetGame();
+                return;
+            }
             if (dino.isGrounded) {
                 dino.velocityY = -dino.jumpStrength; // (-)ve cuz velocityY's direction is down ;)
                 dino.isGrounded = false;
@@ -173,8 +197,19 @@
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 obstacles[i].x -= gameSpeed;
 
-                drawSprite(obstacles[i].sprite, obstacles[i].x, obstacles[i].y, "#27ae60");
+                drawSprite(obstacles[i].sprite, obstacles[i].x, obstacles[i].y, "#283618"); //this new green little better
 
+                if (checkCol(dino, obstacles[i])) {
+                    gameOver = true;
+                    
+                    ctx.clearRect(0, 0, c.width, c.height);
+                    ctx.fillStyle = '#30343f';
+                    ctx.font = 'bold 36px monospace';
+                    ctx.fillText('GAME OVER!', c.width / 2 - 100, 200);
+                    ctx.font = '18px monospace';
+                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2 - 160, 240);
+                    return;
+                }
                 if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
             }
             
