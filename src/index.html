@@ -114,6 +114,8 @@
         let nextSpawnTime = 100;
         let gameOver = false;
 
+        let score = 0;
+
         function spawnObstacle() {
             const ss = vari[Math.floor(Math.random()*vari.length)];
 
@@ -157,6 +159,7 @@
             dino.y = groundY - dino.height;
             dino.velocityY = 0;
             update();
+            points = 0;
         }
 
         function triggerJump() {
@@ -173,6 +176,7 @@
         function update() { //actively updates pos
             ctx.clearRect(0, 0, c.width, c.height);
 
+            score+= 0.15;
             dino.velocityY += dino.gravity;
             dino.y += dino.velocityY;
 
@@ -203,11 +207,12 @@
                     gameOver = true;
                     
                     ctx.clearRect(0, 0, c.width, c.height);
-                    ctx.fillStyle = '#30343f';
+                    ctx.fillStyle = '#1e2749';
                     ctx.font = 'bold 36px monospace';
                     ctx.fillText('GAME OVER!', c.width / 2 - 100, 200);
+                    ctx.fillText(`Your score: ${Math.floor(score)}`, c.width / 2 - 140, 240);
                     ctx.font = '18px monospace';
-                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2 - 160, 240);
+                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2 - 160, 280);
                     return;
                 }
                 if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
