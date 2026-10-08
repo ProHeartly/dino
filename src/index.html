@@ -13,82 +13,19 @@
         }
     </style>
     <script>
+        // turns out its way over 3,072 bytes, so i will have to cut everything uppppp
+        // started with sprites which ate up most of the spaces!
         // I changed names to short for extra space
         document.querySelector("h1").onclick = () => (alert("woaa!"));
         
         const c = document.getElementById("canvas");
         const ctx = c.getContext('2d');
 
-        const dinoS = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ] // 16x16 block of dino i mean "square" for now
+        const dinoS = [1008, 2040, 1784, 2040, 2016, 2044, 8176, 16382, 65520, 65520, 65472, 16320, 3968, 3456, 2304, 3456];
 
-        const Single = [
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1]
-        ];
-
-        const Double = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ];
-
-        const Tall = [
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1]
-        ];
+        const Single = [126, 60, 153, 219, 255, 255, 126, 60, 60, 60, 60, 60];
+        const Double = [114736, 114736, 246259, 258559, 258559, 127228, 114736, 114736, 114736, 114736, 114736, 114736];
+        const Tall = [252, 252, 252, 252, 888, 827, 955, 1023, 1023, 255, 120, 120, 120, 120, 120, 120, 120, 120];
 
         const vari = [Single, Double, Tall];
 
@@ -99,9 +36,9 @@
 
         let dino = {
             x: 300,
-            y: groundY - (dinoS.length * pixel),
-            width: dinoS[0].length * pixel,
-            height: dinoS.length * pixel,
+            y: groundY - (16 * pixel),
+            width: 16 * pixel,
+            height: 16 * pixel,
             velocityY: 0,
             gravity: 0.8,
             jumpStrength: 17, // turns out 16 was a little less
@@ -117,29 +54,32 @@
         let score = 0;
 
         function spawnObstacle() {
-            const ss = vari[Math.floor(Math.random()*vari.length)];
-
-            const oW = ss[0].length * pixel;
-            const oH = ss.length * pixel;
+            const types = [
+                { s: Single, c: 8, r: 12 },
+                { s: Double, c: 18, r: 12 },
+                { s: Tall, c: 10, r: 18 }
+            ];
+            const choice = types[Math.floor(Math.random() * types.length)];
 
             obstacles.push({
                 x: c.width,
-                y: groundY - oH,
-                width: oW,
-                height: oH,
-                sprite: ss
+                y: groundY - (choice.r * pixel),
+                width: choice.c * pixel,
+                height: choice.r * pixel,
+                sprite: choice.s,
+                cols: choice.c
             });
         }
 
-        function drawSprite(sprite, x, y, color) { //draws the dinooo and obstacles
+        function drawSprite(s, width, x, y, color) { //draws the dinooo and obstacles
             ctx.fillStyle = color;
-            for (let r = 0; r < sprite.length; r++) {
-                for (let c = 0; c < sprite[r].length; c++) {
-                    if (sprite[r][c] === 1) {
-                        ctx.fillRect(x + (c*pixel), y + (r * pixel), pixel, pixel);
-                    }
+            s.forEach((rowNumber, r) => {
+            for (let c = 0; c < width; c++) {
+                if ((rowNumber >> (width - 1 - c)) & 1) {
+                    ctx.fillRect(x + c * pixel, y + r * pixel, pixel, pixel);
                 }
             }
+        });
         }
 
         // checks AABB collision
@@ -158,8 +98,8 @@
             gameOver = false;
             dino.y = groundY - dino.height;
             dino.velocityY = 0;
-            update();
             score = 0;
+            update();
         }
 
         function triggerJump() {
@@ -180,13 +120,10 @@
             dino.velocityY += dino.gravity;
             dino.y += dino.velocityY;
 
-            const maxFloorY = groundY - dino.height;
-            if (dino.y >= maxFloorY) {
-                dino.y = maxFloorY;
+            dino.isGrounded = dino.y >= groundY - dino.height;
+            if (dino.isGrounded) {
+                dino.y = groundY - dino.height;
                 dino.velocityY = 0;
-                dino.isGrounded = true;
-            } else {
-                dino.isGrounded = false;
             }
 
             // spawner
@@ -201,7 +138,7 @@
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 obstacles[i].x -= gameSpeed;
 
-                drawSprite(obstacles[i].sprite, obstacles[i].x, obstacles[i].y, "#283618"); //this new green little better
+                drawSprite(obstacles[i].sprite, obstacles[i].cols, obstacles[i].x, obstacles[i].y, "#283618"); //this new green little better
 
                 if (checkCol(dino, obstacles[i])) {
                     gameOver = true;
@@ -209,10 +146,10 @@
                     ctx.clearRect(0, 0, c.width, c.height);
                     ctx.fillStyle = '#1e2749';
                     ctx.font = 'bold 36px monospace';
-                    ctx.fillText('GAME OVER!', c.width / 2 - 100, 200);
-                    ctx.fillText(`Your score: ${Math.floor(score)}`, c.width / 2 - 140, 240);
-                    ctx.font = '18px monospace';
-                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2 - 160, 280);
+                    ctx.textAlign = 'center';
+                    ctx.fillText('GAME OVER!', c.width / 2, 200);
+                    ctx.fillText(`Your score: ${Math.floor(score)}`, c.width / 2, 240);
+                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2, 280);
                     return;
                 }
                 if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
@@ -226,7 +163,7 @@
             ctx.lineTo(c.width, groundY);
             ctx.stroke();
 
-            drawSprite(dinoS, dino.x, dino.y, "#273469");
+            drawSprite(dinoS, 16, dino.x, dino.y, "#273469");
             
             requestAnimationFrame(update);
         }
