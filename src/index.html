@@ -41,6 +41,11 @@
             { s: Tall, cols: 10, w: 70, h: 126, y: 304 }
         ];
 
+        const Cloud = [1792,4044,32766,65535,16380];
+        const Pyr = [384,960,2016,4080,8184,16380,32766,65535];
+        const Peb1 = [1835392,12296];
+        const Peb2 = [16440,3074];
+        const Peb3 = [3088];
 
         const pixel = 7; // scales our pixel art
 
@@ -57,12 +62,12 @@
             ig: false // isGrounded -to make it only jump when in floorrr
         }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0, t = 0;
 
-        function drawSprite(s, w, x, y, color) { //draws the dinooo and obstacles
+        function drawSprite(s, w, x, y, color, p=pixel) { //draws the dinooo and obstacles
             ctx.fillStyle = color;
-            s.forEach((rowNumber, r) => {
+            s.forEach((n, r) => {
             for (let c = 0; c < w; c++) {
-                if ((rowNumber >> (w - 1 - c)) & 1) {
-                    ctx.fillRect(x + c * pixel, y + r * pixel, pixel, pixel);
+                if ((n >> (w - 1 - c)) & 1) {
+                    ctx.fillRect(x + c * p, y + r * p, p, p);
                 }
             }
         });
@@ -108,6 +113,12 @@
             ctx.clearRect(0, 0, c.width, c.height);
 
             t++;
+            layer(Pyr, 16, 318, 14, 0.5, 400, "#e09f3e"); // pyramidss
+            layer(Cloud, 16, 50, 5, 0.2, 300, "#bde0fe"); // one far
+            layer(Cloud, 16, 140, 5, 0.35, 500, "#a2d2ff"); // one close
+            layer(Peb1, 24, 438, 4, gameSpeed, 40, "#2f3e46");
+            layer(Peb2, 16, 452, 4, gameSpeed, 90, "#2f3e46");
+            layer(Peb3, 12, 466, 4, gameSpeed, 170, "#1e2749");
 
             score+= 0.15;
             dino.v += dino.g;
