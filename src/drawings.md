@@ -3,7 +3,10 @@ heres the plan: we convert row to decimal no
 
 **so** i will be keeping the original here and compressing those in there
 
-const dinoS = [
+
+**update!!**
+cutting dino into body and leg and animating legs
+const dinoB = [
     [0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0],
     [0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0],
     [0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,0],
@@ -15,12 +18,35 @@ const dinoS = [
     [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
     [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
     [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-    [0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+    [0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0]
+]
+
+// jump
+const legsJ = [
     [0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0],
     [0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0],
     [0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0],
     [0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0]
-] // 16x16 block of dino ~~i mean "square" for now~~ don't judge me... IM NOT ARTIST :sob:
+];
+
+// left foot down, right leg lifted
+const legsA = [
+    [0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0],
+    [0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0],
+    [0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0]
+];
+
+// right foot down, left leg lifted
+const legsB = [
+    [0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0]
+];
+
+
+// 16x16 block of dino ~~i mean "square" for now~~ don't judge me... IM NOT ARTIST :sob:
 
 const Single = [
     [0,1,1,1,1,1,1,0],

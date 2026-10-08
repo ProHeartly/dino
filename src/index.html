@@ -26,7 +26,10 @@
         const c = document.getElementById("c");
         const ctx = c.getContext('2d');
 
-        const dinoS = [1008, 2040, 1784, 2040, 2016, 2044, 8176, 16382, 65520, 65520, 65472, 16320, 3968, 3456, 2304, 3456];
+        const dinoB = [1008,2040,1784,2040,2016,2044,8176,16382,65520,65520,65472,16320]; // bodyy
+        const legsJ = [3968,3456,2304,3456];  // jump/idle
+        const legsA = [3968,3200,2240,3072];  // run 1
+        const legsB = [3968,2432,6272,192];   // run 2
 
         const Single = [126, 60, 153, 219, 255, 255, 126, 60, 60, 60, 60, 60];
         const Double = [114736, 114736, 246259, 258559, 258559, 127228, 114736, 114736, 114736, 114736, 114736, 114736];
@@ -52,7 +55,7 @@
             g: 0.8, // gravity
             j: 17, // jump strength -turns out 16 was a little less
             ig: false // isGrounded -to make it only jump when in floorrr
-        }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0;
+        }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0, t = 0;
 
         function drawSprite(s, w, x, y, color) { //draws the dinooo and obstacles
             ctx.fillStyle = color;
@@ -63,6 +66,11 @@
                 }
             }
         });
+        }
+
+        function layer(s, w, y, p, sp, g, col) {
+            const W = w * p + g;
+            for (let x = -(t * sp % W); x < 854; x += W) drawSprite(s, w, x, y, col, p);
         }
 
         // checks AABB collision
@@ -98,6 +106,8 @@
 
         function update() { //actively updates pos
             ctx.clearRect(0, 0, c.width, c.height);
+
+            t++;
 
             score+= 0.15;
             dino.v += dino.g;
@@ -143,7 +153,10 @@
             ctx.fillStyle = '#1e2749';
             ctx.fillRect(0, groundY, c.width, 3); // why didn't i think of this earlierr, we can just make it rectangle and save space
 
-            drawSprite(dinoS, 16, dino.x, dino.y, "#273469");
+            drawSprite(
+                dinoB.concat(dino.ig ? [legsA, legsB][~~score % 2] : legsJ),
+                16, dino.x, dino.y, "#273469"
+            );
             
             requestAnimationFrame(update);
         }
