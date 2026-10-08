@@ -112,15 +112,17 @@
         function update() { //actively updates pos
             ctx.clearRect(0, 0, c.width, c.height);
 
-            t++;
-            layer(Pyr, 16, 318, 14, 0.5, 400, "#e09f3e"); // pyramidss
+            t+= gameSpeed;
+            layer(Pyr, 16, 318, 14, 0.1, 400, "#e09f3e"); // pyramidss
             layer(Cloud, 16, 50, 5, 0.2, 300, "#bde0fe"); // one far
             layer(Cloud, 16, 140, 5, 0.35, 500, "#a2d2ff"); // one close
-            layer(Peb1, 24, 438, 4, gameSpeed, 40, "#2f3e46");
-            layer(Peb2, 16, 452, 4, gameSpeed, 90, "#2f3e46");
-            layer(Peb3, 12, 466, 4, gameSpeed, 170, "#1e2749");
+            layer(Peb1, 24, 438, 4, 1, 40, "#2f3e46");
+            layer(Peb2, 16, 452, 4, 1, 90, "#2f3e46");
+            layer(Peb3, 12, 466, 4, 1, 170, "#1e2749");
 
             score+= 0.15;
+            // lets make gameSpeed change shall we??
+            gameSpeed = 10 + Math.min(4, score / 150)
             dino.v += dino.g;
             dino.y += dino.v;
 
