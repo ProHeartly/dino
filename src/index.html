@@ -15,6 +15,8 @@
     <script>
         // turns out its way over 3,072 bytes, so i will have to cut everything uppppp
         // started with sprites which ate up most of the spaces!
+        // replaced old line making strat with just making rectangle which is 1 liner
+        // using precalculated values for things that are constant like x, y, width, height, etc of vari, dino's y pos, position of text, other
         // I changed names to short for extra space
         document.querySelector("h1").onclick = () => (alert("woaa!"));
         
@@ -27,7 +29,11 @@
         const Double = [114736, 114736, 246259, 258559, 258559, 127228, 114736, 114736, 114736, 114736, 114736, 114736];
         const Tall = [252, 252, 252, 252, 888, 827, 955, 1023, 1023, 255, 120, 120, 120, 120, 120, 120, 120, 120];
 
-        const vari = [Single, Double, Tall];
+        const vari = [
+            { s: Single, cols: 8, w: 56, h: 84, y: 346 },
+            { s: Double, cols: 18, w: 126, h: 84, y: 346 },
+            { s: Tall, cols: 10, w: 70, h: 126, y: 304 }
+        ];
 
 
         const pixel = 7; // scales our pixel art
@@ -36,9 +42,9 @@
 
         let dino = {
             x: 300,
-            y: groundY - (16 * pixel),
-            width: 16 * pixel,
-            height: 16 * pixel,
+            y: 318, // 430 - 112
+            width: 112, // 16 * pixel (7)
+            height: 112,
             velocityY: 0,
             gravity: 0.8,
             jumpStrength: 17, // turns out 16 was a little less
@@ -54,20 +60,15 @@
         let score = 0;
 
         function spawnObstacle() {
-            const types = [
-                { s: Single, c: 8, r: 12 },
-                { s: Double, c: 18, r: 12 },
-                { s: Tall, c: 10, r: 18 }
-            ];
-            const choice = types[Math.floor(Math.random() * types.length)];
+            const ch = vari[Math.floor(Math.random() * 3)];
 
             obstacles.push({
                 x: c.width,
-                y: groundY - (choice.r * pixel),
-                width: choice.c * pixel,
-                height: choice.r * pixel,
-                sprite: choice.s,
-                cols: choice.c
+                y: ch.y,
+                width: ch.w,
+                height: ch.h,
+                sprite: ch.s,
+                cols: ch.cols
             });
         }
 
@@ -96,7 +97,7 @@
             obstacles = [];
             spawnTimer = 0;
             gameOver = false;
-            dino.y = groundY - dino.height;
+            dino.y = 318;
             dino.velocityY = 0;
             score = 0;
             update();
@@ -120,9 +121,9 @@
             dino.velocityY += dino.gravity;
             dino.y += dino.velocityY;
 
-            dino.isGrounded = dino.y >= groundY - dino.height;
+            dino.isGrounded = dino.y >= 318;
             if (dino.isGrounded) {
-                dino.y = groundY - dino.height;
+                dino.y = 318;
                 dino.velocityY = 0;
             }
 
@@ -147,21 +148,17 @@
                     ctx.fillStyle = '#1e2749';
                     ctx.font = 'bold 36px monospace';
                     ctx.textAlign = 'center';
-                    ctx.fillText('GAME OVER!', c.width / 2, 200);
-                    ctx.fillText(`Your score: ${Math.floor(score)}`, c.width / 2, 240);
-                    ctx.fillText('Press SPACE or CLICK to Restart', c.width / 2, 280);
+                    ctx.fillText('GAME OVER!', 427, 200);
+                    ctx.fillText(`Your score: ${Math.floor(score)}`, 427, 240);
+                    ctx.fillText('Press SPACE or CLICK to Restart', 427, 280);
                     return;
                 }
                 if (obstacles[i].x + obstacles[i].width < 0) obstacles.splice(i, 1);
             }
             
 
-            ctx.strokeStyle = '#1e2749';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(0, groundY);
-            ctx.lineTo(c.width, groundY);
-            ctx.stroke();
+            ctx.fillStyle = '#1e2749';
+            ctx.fillRect(0, groundY, c.width, 3); // why didn't i think of this earlierr, we can just make it rectangle and save space
 
             drawSprite(dinoS, 16, dino.x, dino.y, "#273469");
             
