@@ -1,5 +1,5 @@
 <body>
-    <h1>Hello worlddddd</h1>
+    <h1>Dino's worlddddd</h1>
     <canvas width="854" height="480" id="c"></canvas>
     <style>
         body {
@@ -112,7 +112,9 @@
 
         function update() { //actively updates pos
             ctx.clearRect(0, 0, c.width, c.height);
-
+            ctx.font = '20px monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText(~~score, 840, 30);
             t+= gameSpeed;
             layer(Pyr, 16, 318, 14, 0.1, 400, "#e09f3e"); // pyramidss
             layer(Cloud, 16, 50, 5, 0.2, 300, "#bde0fe"); // one far
@@ -153,7 +155,7 @@
                     
                     ctx.clearRect(0, 0, c.width, c.height);
                     ctx.fillStyle = '#1e2749';
-                    ctx.font = 'bold 36px monospace';
+                    ctx.font = 'bold 36px';
                     ctx.textAlign = 'center';
                     ctx.fillText('GAME OVER!', 427, 200);
                     ctx.fillText(`Your score: ${Math.floor(score)}`, 427, 240);
