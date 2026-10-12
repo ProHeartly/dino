@@ -190,7 +190,7 @@
             requestAnimationFrame(update);
         }
 
-        window.onmousedown = triggerJump;
+        window.onpointerdown = triggerJump;
         window.onkeydown = e => e.key === ' ' && (e.preventDefault(), triggerJump());
 
         update();
