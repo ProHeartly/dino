@@ -61,7 +61,7 @@
             g: 0.8, // gravity
             j: 17, // jump strength -turns out 16 was a little less
             ig: false // isGrounded -to make it only jump when in floorrr
-        }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0, t = 0, te = 0, tg=rg();
+        }, obstacles = [], gameSpeed = 10, spawnTimer = 0, nextSpawnTime = 100, gameOver = false, score = 0, t = 0, te = 0, tg=rg(), cd = 0;
         
         function rg() {return 200 + ~~(Math.random()*300);} // bascially generates 200 to 500 ranged value
 
@@ -101,6 +101,7 @@
             score = 0;
             te = 0;
             tg = rg();
+            cd=0;
             update();
         }
 
@@ -109,9 +110,9 @@
                 resetGame();
                 return;
             }
-            if (dino.ig) {
+            if (dino.ig || !cd) {
                 dino.v = -dino.j; // (-)ve cuz velocityY's direction is down ;)
-                dino.ig = false;
+                dino.ig || (cd = 300);
             }
         }
 
@@ -120,6 +121,9 @@
             ctx.font = '20px monospace';
             ctx.textAlign = 'right';
             ctx.fillText(`${~~score} \\ ${ (te ? 'CHAOSSSS' : tg ) }`, 840, 30);
+            ctx.font = '14px monospace';
+            ctx.fillStyle = cd ? '#aab' : '#1e2749';
+            ctx.fillText('air jump - ' + (cd ? ~~(cd / 60) + 1 + 's' : 'available'), 840, 50);
             t+= gameSpeed;
             layer(Pyr, 16, 318, 14, 0.1, 400, "#e09f3e"); // pyramidss
             layer(Cloud, 16, 50, 5, 0.2, 300, "#bde0fe"); // one far
@@ -129,6 +133,7 @@
             layer(Peb3, 12, 466, 4, 1, 170, "#1e2749");
 
             score+= 0.15;
+            cd && cd--;
             if (!te && score >= tg) te = score + 150;
             if (te && score >= te) te = 0, tg = ~~score + rg();
             c.style.filter = te ? 'invert(1)' : '';
@@ -149,7 +154,7 @@
                 const ch = vari[~~(Math.random() * 3)];
                 obstacles.push({ x: 854, y: ch.y, w: ch.w, h: ch.h, s: ch.s, cols: ch.cols });
                 spawnTimer = 0;
-                nextSpawnTime = (~~(Math.random() * 52) + 52) * (te ? .7 : 1);
+                nextSpawnTime = (~~(Math.random() * 60) + 60) * (te ? .7 : 1);
             }
 
             // move andd draw obstacles
